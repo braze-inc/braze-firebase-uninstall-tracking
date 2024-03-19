@@ -1,0 +1,36 @@
+{
+  "name": "braze-firebase-extension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "david <davidbielik@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --cache \"functions/src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --cache --fix \"functions/src/**/*.{js,jsx,ts,tsx}\"",
+    "build": "yarn lint:fix && yarn --cwd functions build",
+    "release": "firebase ext:dev:upload braze/braze-analytics-uninstall-tracking"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "yarn run lint:fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "typescript": "*"
+  }
+}

@@ -1,0 +1,84 @@
+# Learn detailed information about the fields of an extension.yaml file in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml
+
+# Identifier for your extension
+name: braze-analytics-uninstall-tracking
+version: 0.0.3 # Follow semver versioning
+specVersion: v1beta # Version of the Firebase Extensions specification
+
+# Friendly display name for your extension (~3-5 words)
+displayName: Braze Android Uninstall Tracking
+icon: logo.png
+tags: [marketing, messaging]
+# Brief description of the task your extension performs (~1 sentence)
+description: >-
+  Track Android uninstall events in Braze to trigger real-time profile updates and message triggering
+
+license: Apache-2.0 # https://spdx.org/licenses/
+
+contributors:
+  - authorName: Braze Inc.
+    email: support@braze.com
+externalServices:
+  - name: Braze
+    pricingUri: https://www.braze.com/?utm_source=braze-firebase-uninstall-tracking-extension
+
+# Public URL for the source code of your extension.
+sourceUrl: https://github.com/braze-inc/braze-firebase-uninstall-tracking
+
+# Specify whether a paid-tier billing plan is required to use your extension.
+# Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
+billingRequired: true
+
+# In an `apis` field, list any Google APIs (like Cloud Translation, BigQuery, etc.)
+# required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#apis-field
+
+# In a `roles` field, list any IAM access roles required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
+
+# In the `resources` field, list each of your extension's functions, including the trigger for each function.
+# Learn more in the docs:
+# https://firebase.google.com/dinocs/extensions/reference/extension-yaml#resources-field
+resources:
+  - name: brazeTrackUninstallEvent
+    type: firebaseextensions.v1beta.function
+    description: >-
+      HTTP request-triggered function that tracks an uninstall event for the user's Braze `device_id` property.
+    properties:
+      timeout: 60s
+      availableMemoryMb: 128
+      runtime: 'nodejs20'
+      eventTrigger:
+        eventType: providers/google.firebase.analytics/eventTypes/event.log
+        resource: projects/${PROJECT_ID}/events/app_remove
+
+# In the `params` field, set up your extension's user-configured parameters.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
+# https://firebase.google.com/docs/extensions/publishers/functions#analytics
+params:
+  - param: BRAZE_REST_API_KEY
+    label: Braze REST API Key
+    description: >-
+      This key must have `users.track` permission. 
+      See: https://www.braze.com/docs/user_guide/administrative/app_settings/api_settings_tab/
+    type: string
+    default:
+    required: true
+    immutable: false
+    validationRegex: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    validationErrorMessage: 'Must be a REST API Key in UUID V4 format.'
+  - param: BRAZE_REST_API_URL
+    label: Braze REST API URL
+    description: >-
+      Enter the REST API URL assigned to your account. For example: `https://rest.iad-05.braze.com`
+      See: https://www.braze.com/docs/api/basics/#endpoints
+    type: string
+    default:
+    required: true
+    immutable: false
+    validationRegex: "^https://(rest\\.iad-\\d+\\|sondheim|todd|.*d-use-1).braze\\.(com|eu)$"
+    validationErrorMessage: 'Must be a valid Braze REST API URL (i.e. https://rest.iad-05.braze.com)'
